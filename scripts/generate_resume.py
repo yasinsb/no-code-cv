@@ -111,8 +111,7 @@ def read_experience(df):
             if pd.notna(row.iloc[i]) and str(row.iloc[i]).strip():
                 job['bullets'].append(escape_latex(row.iloc[i]))
         
-        if job['bullets']:  # Only add if has content
-            jobs.append(job)
+        jobs.append(job)
     
     return jobs
 

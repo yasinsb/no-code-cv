@@ -2,11 +2,17 @@
 \begin{resumesection}{Professional Experience}
 
 <<% for job in jobs %>>
+<<% if job.bullets %>>
 \begin{resumeitem}{<<job.title>>}{<<job.start_date>> -- <<job.end_date>>}{<<job.company>>}{<<job.location>>}
 <<% for bullet in job.bullets %>>
 \item <<bullet>>
 <<% endfor %>>
 \end{resumeitem}
+<<% else %>>
+\textbf{<<job.title>>} \hfill \textbf{<<job.start_date>> -- <<job.end_date>>}\\
+\textit{<<job.company>>} \hfill \textit{<<job.location>>}
+\vspace{1em}
+<<% endif %>>
 
 <<% endfor %>>
 \end{resumesection}

@@ -2,11 +2,17 @@
 \begin{resumesection}{Education}
 
 <<% for degree in degrees %>>
+<<% if degree.bullets %>>
 \begin{resumeitem}{<<degree.degree>>}{<<degree.start_year>> -- <<degree.end_year>>}{<<degree.institution>>}{<<degree.location>>}
 <<% for bullet in degree.bullets %>>
 \item <<bullet>>
 <<% endfor %>>
 \end{resumeitem}
+<<% else %>>
+\textbf{<<degree.degree>>} \hfill \textbf{<<degree.start_year>> -- <<degree.end_year>>}\\
+\textit{<<degree.institution>>} \hfill \textit{<<degree.location>>}
+\vspace{1em}
+<<% endif %>>
 
 <<% endfor %>>
 \end{resumesection}
