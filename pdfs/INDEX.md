@@ -1,9 +1,10 @@
 # Resume Builds
 
 Built from: `dev` branch
-Commit: `e1406fc0e84da87610615ead4870815c37739d50`
-Build: #14
-Date: 2025-10-08 23:54:20 UTC
+Commit: `0dde3c2dd2a8a10a15edd1e1a05c2ad621657864`
+Build: #15
+Date: 2025-10-09 00:52:57 UTC
 
 ## Available Resumes
+- [resume_data.pdf](resume_data.pdf)
 - [resume_data_alt.pdf](resume_data_alt.pdf)
