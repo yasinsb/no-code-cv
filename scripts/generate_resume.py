@@ -242,7 +242,7 @@ def main():
         
         # Process core sections
         for sheet_name in sheet_names:
-            df = pd.read_excel(data_file, sheet_name=sheet_name, header=None)
+            df = pd.read_excel(data_file, sheet_name=sheet_name, header=None, skiprows=1)
             sheet_lower = sheet_name.lower()
             
             print(f"  Processing: {sheet_name}...", end=" ")
