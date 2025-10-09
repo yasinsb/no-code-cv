@@ -1,0 +1,12 @@
+% Professional Experience
+\begin{resumesection}{Professional Experience}
+
+<<% for job in jobs %>>
+\begin{resumeitem}{<<job.title>>}{<<job.start_date>> -- <<job.end_date>>}{<<job.company>>}{<<job.location>>}
+<<% for bullet in job.bullets %>>
+\item <<bullet>>
+<<% endfor %>>
+\end{resumeitem}
+
+<<% endfor %>>
+\end{resumesection}

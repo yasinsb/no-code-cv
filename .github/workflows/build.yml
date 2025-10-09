@@ -1,0 +1,181 @@
+name: Build Resume PDF
+
+on:
+  push:
+    branches:
+      - 'codex-*'
+      - 'dev*'
+      - 'main'
+    paths-ignore:
+      - '**.md'
+      - '**.txt'
+      - 'LICENSE'
+      - '.gitignore'
+  workflow_dispatch:
+    # Allow manual triggering
+
+# Scheduled builds only on main branch
+  schedule:
+    # Rebuild monthly on the 1st at 8:00 AM UTC (main branch only)
+    - cron: '0 8 1 * *'
+
+jobs:
+  build-all-profiles:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name != 'schedule' || github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Cache LaTeX packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /usr/share/texlive
+            /usr/share/texmf
+            /var/lib/texmf
+          key: texlive-${{ runner.os }}-minimal
+          restore-keys: |
+            texlive-${{ runner.os }}-
+      
+      - name: Install LaTeX (minimal, ONCE for all profiles)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-fonts-recommended \
+            latexmk \
+            cm-super
+      
+      - name: Build all profiles
+        id: build-profiles
+        run: |
+          mkdir -p build-outputs
+          cd profiles
+          for profile in *.xlsx; do
+            echo "🔨 Building: $profile"
+            profile_name="${profile%.xlsx}"
+            
+            # Generate LaTeX
+            cd ..
+            python scripts/generate_resume.py "$profile"
+            
+            # Compile PDF
+            cd build
+            latexmk -pdf -interaction=nonstopmode -halt-on-error -jobname="$profile_name" main.tex
+            
+            # Move to outputs
+            mv "${profile_name}.pdf" ../build-outputs/
+            cd ..
+            
+            echo "✅ Completed: ${profile_name}.pdf"
+            cd profiles
+          done
+          cd ..
+          
+          # List all built PDFs
+          echo "built_pdfs<<EOF" >> $GITHUB_OUTPUT
+          ls -1 build-outputs/*.pdf >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+      
+      - name: Upload all PDFs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: resumes-${{ github.ref_name }}-${{ github.run_number }}
+          path: build-outputs/*.pdf
+          retention-days: 90
+      
+      - name: Create Release with all PDFs
+        if: startsWith(github.ref, 'refs/heads/codex-') || startsWith(github.ref, 'refs/heads/dev')
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}-build-${{ github.run_number }}
+          name: Resume Build - ${{ github.ref_name }} #${{ github.run_number }}
+          body: |
+            Automated resume build from branch `${{ github.ref_name }}`
+            
+            **Build Details:**
+            - Branch: ${{ github.ref_name }}
+            - Commit: ${{ github.sha }}
+            - Run Number: ${{ github.run_number }}
+            - Triggered by: ${{ github.event_name }}
+            - Profiles: All *.xlsx in profiles/
+            
+            **Download PDFs:** Click on PDF files below to download directly.
+          files: build-outputs/*.pdf
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Push all PDFs to builds branch
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # Check if builds branch exists
+          if git ls-remote --heads origin builds | grep -q builds; then
+            git fetch origin builds
+            git checkout builds
+          else
+            git checkout --orphan builds
+            git rm -rf . || true
+          fi
+          
+          # Copy all PDFs
+          mkdir -p pdfs
+          cp build-outputs/*.pdf pdfs/
+          
+          # Create index
+          cat > pdfs/INDEX.md << EOF
+          # Resume Builds
+          
+          Built from: \`${{ github.ref_name }}\` branch
+          Commit: \`${{ github.sha }}\`
+          Build: #${{ github.run_number }}
+          Date: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Available Resumes
+          EOF
+          
+          ls -1 pdfs/*.pdf | while read pdf; do
+            filename=$(basename "$pdf")
+            echo "- [$filename]($filename)" >> pdfs/INDEX.md
+          done
+          
+          # Commit and push
+          git add pdfs/
+          git commit -m "Build: All profiles from ${{ github.ref_name }} #${{ github.run_number }}" || echo "No changes"
+          git push origin builds
+          
+      - name: Build summary
+        run: |
+          echo "### ✅ All Resumes Built Successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Build Number:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Built Profiles:**" >> $GITHUB_STEP_SUMMARY
+          ls -1 build-outputs/*.pdf | while read pdf; do
+            filename=$(basename "$pdf")
+            echo "- \`$filename\`" >> $GITHUB_STEP_SUMMARY
+          done
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📥 **Access PDFs:**" >> $GITHUB_STEP_SUMMARY
+          echo "- Artifacts: Actions tab (90 days)" >> $GITHUB_STEP_SUMMARY
+          echo "- Release: Release page (permanent)" >> $GITHUB_STEP_SUMMARY
+          echo "- Repository: \`builds\` branch → \`pdfs/\` folder" >> $GITHUB_STEP_SUMMARY
+

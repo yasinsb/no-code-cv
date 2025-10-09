@@ -1,0 +1,59 @@
+# Build directory (all generated files)
+build/
+
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.env
+
+# LaTeX temporary files (if building locally outside build/)
+*.aux
+*.log
+*.out
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+
+# PDF output
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Temporary Excel files
+~$*.xlsx
+
+# Allow profiles directory
+!profiles/*.xlsx
+
+# Old structure (to be cleaned up)
+includes/
+main.tex
+generate_resume.py
+resume.cls
+resume_data.xlsx

@@ -1,0 +1,9 @@
+% Volunteering
+\begin{resumesection}{Volunteering}
+\begin{itemize}
+\setlength\itemsep{-0.3em}
+<<% for vol in volunteering %>>
+\item \textbf{<<vol.role>>}<<% if vol.organization %>> at <<vol.organization>><<% endif %>><<% if vol.dates %>>, <<vol.dates>><<% endif %>>
+<<% endfor %>>
+\end{itemize}
+\end{resumesection}

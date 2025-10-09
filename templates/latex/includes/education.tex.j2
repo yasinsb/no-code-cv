@@ -1,0 +1,12 @@
+% Education
+\begin{resumesection}{Education}
+
+<<% for degree in degrees %>>
+\begin{resumeitem}{<<degree.degree>>}{<<degree.start_year>> -- <<degree.end_year>>}{<<degree.institution>>}{<<degree.location>>}
+<<% for bullet in degree.bullets %>>
+\item <<bullet>>
+<<% endfor %>>
+\end{resumeitem}
+
+<<% endfor %>>
+\end{resumesection}
