@@ -2,6 +2,28 @@
 
 Comprehensive guide for using and customizing the template-based resume system.
 
+## 🎯 How to Use (No Coding Required!)
+
+### The Simple Web-Based Workflow
+
+**Perfect for: Anyone who just wants to update their resume content**
+
+1. **Fork the repository** on GitHub (one-time setup)
+2. **Download** `profiles/resume_data.xlsx` from your forked repo
+3. **Edit** the file on your computer (Excel, Google Sheets, LibreOffice)
+4. **Upload** the edited file back to GitHub:
+   - Navigate to `profiles/` folder in your repo
+   - Click "Add file" → "Upload files"  
+   - Drag your `resume_data.xlsx`
+   - Write a commit message like "Updated work experience"
+   - Click "Commit changes"
+5. **Wait ~2 minutes** for GitHub Actions to build your PDF
+6. **Download** from "Actions" tab (Artifacts) or "Releases" page
+
+**That's it!** No terminal, no Git commands, no complicated setup.
+
+---
+
 ## 📊 Excel Structure
 
 ### Core Sheets (Required)
@@ -287,23 +309,66 @@ For other chars, add to `escape_latex()` function
 
 ## 🚀 Workflow Examples
 
-### Quick Update
+### Quick Update (Web-Based - No Code!)
+
+1. Go to `profiles/resume_data.xlsx` in your GitHub repo
+2. Click "Download" to save the file locally
+3. Edit the file with Excel/Google Sheets/LibreOffice
+4. Save and go back to GitHub
+5. Navigate to `profiles/` folder
+6. Click "Add file" → "Upload files"
+7. Drag your edited file and commit
+8. Wait 2 minutes, download PDF from Actions or Releases
+
+**No terminal needed!**
+
+---
+
+## 🔧 Advanced / Developer Workflows
+
+**For users who want to customize templates or work with Git locally.**
+
+### Local Development Setup
+
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/no-code-cv.git
+cd no-code-cv
+
+# Create virtual environment (optional)
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Install LaTeX (if not already installed)
+# macOS: brew install --cask mactex
+# Ubuntu: sudo apt-get install texlive-full
+# Windows: Install MiKTeX from miktex.org
+```
+
+### Quick Update (Local)
 ```bash
 # 1. Edit Excel file
 open profiles/resume_data.xlsx
 
 # 2. Generate & preview
-source .venv/bin/activate
 python scripts/generate_resume.py
 cd build && latexmk -pdf -jobname=resume_output main.tex
 
-# 3. Commit if satisfied
+# 3. View output
+open build/resume_output.pdf  # macOS
+# xdg-open build/resume_output.pdf  # Linux
+# start build/resume_output.pdf  # Windows
+
+# 4. Commit if satisfied
 git add profiles/resume_data.xlsx
 git commit -m "Update work experience"
 git push
 ```
 
-### Major Refactor
+### Major Template Refactor
 ```bash
 # 1. Create feature branch
 git checkout -b update-format

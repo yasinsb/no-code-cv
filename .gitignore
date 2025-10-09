@@ -56,4 +56,5 @@ includes/
 main.tex
 generate_resume.py
 resume.cls
-resume_data.xlsx
+~$*.xlsx
+

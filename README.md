@@ -12,23 +12,52 @@ You edit a spreadsheet → GitHub builds a professional PDF → You download and
 
 That's it! No complicated software, no formatting headaches, no design struggles.
 
+**Truly No-Code:** You never need to touch a terminal or write a single line of code. Everything happens through GitHub's web interface and your favorite spreadsheet editor.
+
 ## 🚀 Quick Start (Really Quick!)
 
-### Option 1: Use on GitHub (Easiest)
-1. **Fork this repo** to your GitHub account
-2. **Edit** `profiles/resume_data.xlsx` directly on GitHub
-3. **Commit** your changes
-4. **Wait 2 minutes** for the build to finish
-5. **Download** your PDF from the "Actions" tab or "Releases"
+### True No-Code Way (Zero Terminal Required!)
 
-### Option 2: Work Locally
+1. **Fork this repo** to your GitHub account (click "Fork" button)
+2. **Download** the Excel file:
+   - Go to `profiles/resume_data.xlsx` in your forked repo
+   - Click "Download" or "Raw" button to save it
+3. **Edit** on your computer:
+   - Open with Excel, Google Sheets (download as .xlsx), or LibreOffice
+   - Fill in your information (name, experience, skills, etc.)
+   - Save the file
+4. **Upload** back to GitHub:
+   - Go back to `profiles/` folder in your repo
+   - Click "Add file" → "Upload files"
+   - Drag your edited `resume_data.xlsx`
+   - Click "Commit changes" (green button)
+5. **Wait 2 minutes** for the magic ✨
+6. **Download your PDF** from:
+   - "Actions" tab → Latest workflow → Artifacts
+   - OR "Releases" page → Latest release
+
+**That's it! No coding, no terminal, no Git commands!**
+
+---
+
+### For Developers / Advanced Users
+
+Want to customize templates, add new sections, or work with Git locally? 
+
+<details>
+<summary>Click to see the developer workflow</summary>
+
 ```bash
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/no-code-cv.git
 cd no-code-cv
 
-# Edit the Excel file (use Excel, Google Sheets, LibreOffice)
+# Edit the Excel file
 open profiles/resume_data.xlsx
+
+# Test locally (optional - requires Python + LaTeX)
+python scripts/generate_resume.py
+cd build && latexmk -pdf -jobname=resume_output main.tex
 
 # Push your changes
 git add profiles/resume_data.xlsx
@@ -37,6 +66,10 @@ git push
 
 # Your PDF will be ready in ~2 minutes!
 ```
+
+For template customization, see `VIBE_CODING_GUIDE.md`
+
+</details>
 
 ---
 
@@ -106,9 +139,13 @@ Everything runs on GitHub Actions (free tier = 2000 minutes/month).
 ## 🤔 FAQ
 
 ### Do I need to install anything?
-**Nope!** If you use GitHub's web interface, you don't need to install anything at all.
+**Absolutely not!** The whole point is **no-code**. Just:
+- A web browser (to access GitHub)
+- Excel, Google Sheets, or LibreOffice (to edit the file)
 
-If you want to work locally, you just need Git (and Excel/LibreOffice to edit the file).
+That's it! No Git, no Python, no LaTeX, no terminal commands.
+
+If you're a developer and want to customize templates or test locally, you'll need Python + LaTeX, but that's totally optional.
 
 ### What if I mess something up?
 Git keeps all your history. You can always undo changes or go back to a previous version.
@@ -118,6 +155,9 @@ Yes! If you're comfortable with LaTeX, you can edit `templates/latex/resume.cls`
 
 ### Can I use this for my team/company?
 Absolutely! Fork it and customize for your needs.
+
+### I'm not technical - can I really use this?
+**Yes!** If you can edit an Excel file and use GitHub's website (which is just clicking buttons), you can use this. No coding required.
 
 ### How does this actually work?
 <details>
