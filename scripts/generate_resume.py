@@ -12,14 +12,45 @@ import re
 
 
 def escape_latex(text):
-    """Escape special LaTeX characters."""
+    """Escape special LaTeX characters and normalize common Unicode characters."""
     if pd.isna(text):
         return ""
     
     text = str(text).strip()
     
-    # Escape special characters
-    replacements = {
+    # First, normalize common Unicode characters to ASCII equivalents
+    # This handles text pasted from Word, LinkedIn, etc.
+    unicode_replacements = {
+        # Smart quotes → regular quotes
+        '\u201c': '"',  # Left double quotation mark
+        '\u201d': '"',  # Right double quotation mark
+        '\u2018': "'",  # Left single quotation mark
+        '\u2019': "'",  # Right single quotation mark
+        '\u2033': '"',  # Double prime
+        # Dashes → hyphens
+        '\u2013': '-',  # En dash
+        '\u2014': '-',  # Em dash
+        '\u2015': '-',  # Horizontal bar
+        # Bullets → dash
+        '\u2022': '-',  # Bullet
+        '\u2023': '-',  # Triangular bullet
+        '\u2043': '-',  # Hyphen bullet
+        # Other common characters
+        '\u2026': '...',  # Ellipsis
+        '\u00a0': ' ',    # Non-breaking space
+        '\u00ad': '',     # Soft hyphen (remove)
+        # Comparison/math operators → safe equivalents
+        '\u2264': '<=',   # Less than or equal
+        '\u2265': '>=',   # Greater than or equal
+        '\u00d7': 'x',    # Multiplication sign
+        '\u00f7': '/',    # Division sign
+    }
+    
+    for unicode_char, ascii_char in unicode_replacements.items():
+        text = text.replace(unicode_char, ascii_char)
+    
+    # Now escape LaTeX special characters
+    latex_replacements = {
         '\\': r'\textbackslash{}',
         '&': r'\&',
         '%': r'\%',
@@ -30,9 +61,12 @@ def escape_latex(text):
         '}': r'\}',
         '~': r'\textasciitilde{}',
         '^': r'\textasciicircum{}',
+        '<': r'\textless{}',
+        '>': r'\textgreater{}',
+        '|': r'\textbar{}',
     }
     
-    for char, replacement in replacements.items():
+    for char, replacement in latex_replacements.items():
         text = text.replace(char, replacement)
     
     return text
