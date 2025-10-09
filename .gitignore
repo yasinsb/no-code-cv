@@ -1,0 +1,26 @@
+# Builds branch should ONLY contain:
+# - README.md
+# - pdfs/ folder with PDFs and INDEX.md
+
+# Ignore everything from main branch that shouldn't be here
+build/
+profiles/
+scripts/
+templates/
+.venv/
+.tmp/
+.cursor/
+
+# System files
+.DS_Store
+*.pyc
+__pycache__/
+
+# Python dependencies
+requirements.txt
+
+# Documentation from main branch
+*.md
+!README.md
+!pdfs/INDEX.md
+
