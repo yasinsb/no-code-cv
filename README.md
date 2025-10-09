@@ -1,214 +1,183 @@
 # No-Code Resume Builder
 
-Professional resume generation from Excel to PDF using Jinja2 templates and LaTeX. Edit a spreadsheet, commit, and get a beautifully formatted PDF automatically.
+**Turn a simple spreadsheet into a beautiful PDF resume. Automatically.**
 
-## 🚀 Quick Start
+No design skills needed. No LaTeX knowledge required. Just edit an Excel file and let the system do the magic! ✨
 
-### 1. Edit Your Resume
-Open `profiles/resume_data.xlsx` and fill in your information:
-- **header** sheet: Name, phone, email, LinkedIn
-- **summary** sheet: Professional summary
-- **experience** sheet: Jobs with bullets
-- **education** sheet: Degrees and details
-- **skills** sheet: Categories and skills
-- **volunteering** sheet: Volunteer work
-- **Custom sheets**: Add any section (Hobbies, Certificates, etc.)
+---
 
-### 2. Generate & Build
+## 🎯 What Does This Do?
+
+You edit a spreadsheet → GitHub builds a professional PDF → You download and use it.
+
+That's it! No complicated software, no formatting headaches, no design struggles.
+
+## 🚀 Quick Start (Really Quick!)
+
+### Option 1: Use on GitHub (Easiest)
+1. **Fork this repo** to your GitHub account
+2. **Edit** `profiles/resume_data.xlsx` directly on GitHub
+3. **Commit** your changes
+4. **Wait 2 minutes** for the build to finish
+5. **Download** your PDF from the "Actions" tab or "Releases"
+
+### Option 2: Work Locally
 ```bash
-# Local development
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/no-code-cv.git
+cd no-code-cv
 
-# Generate LaTeX from Excel
-python scripts/generate_resume.py
+# Edit the Excel file (use Excel, Google Sheets, LibreOffice)
+open profiles/resume_data.xlsx
 
-# Build PDF
-cd build
-latexmk -pdf -jobname=resume_output main.tex
-```
-
-### 3. Or Just Push to GitHub
-```bash
+# Push your changes
 git add profiles/resume_data.xlsx
-git commit -m "Update resume"
+git commit -m "Updated my resume"
 git push
-```
-→ GitHub Actions builds **all profiles** automatically!
 
-### 4. Download Your PDFs
-- **Direct from repo:** `builds` branch → `pdfs/` folder
-- **Artifacts:** GitHub Actions tab (90 days)
-- **Releases:** Release page (dev*/codex-* branches, permanent)
-
-## 🔧 How It Works
-
-```
-┌─────────────────────┐
-│ profiles/           │
-│   resume_data.xlsx  │◄── You edit this
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ scripts/            │
-│   generate_resume.py│◄── Reads Excel
-└──────────┬──────────┘
-           │
-           ▼
-┌─────────────────────┐
-│ templates/latex/    │
-│   includes/*.j2     │◄── Jinja2 templates
-└──────────┬──────────┘
-           │
-           ▼ (renders with data)
-┌─────────────────────┐
-│ build/              │
-│   includes/*.tex    │◄── Generated LaTeX
-│   main.tex          │
-└──────────┬──────────┘
-           │
-           ▼ (LaTeX compilation)
-┌─────────────────────┐
-│ build/              │
-│   resume_output.pdf │◄── Your resume!
-└─────────────────────┘
+# Your PDF will be ready in ~2 minutes!
 ```
 
-## 📁 Project Structure
+---
+
+## 📝 How to Fill Your Resume
+
+Open `profiles/resume_data.xlsx` - you'll see multiple sheets (tabs):
+
+### 📋 Required Sheets:
+- **header** → Your name, phone, email, LinkedIn
+- **summary** → A short paragraph about yourself
+- **experience** → Your jobs (company, role, achievements)
+- **education** → Your degrees
+- **skills** → Your technical skills
+- **volunteering** → Volunteer work (optional but nice!)
+
+### ➕ Custom Sheets (Optional):
+Want to add more sections? Just create a new sheet!
+
+**Examples:**
+- **Hobbies** → One column list: "Photography", "Hiking"
+- **Certificates** → Two columns: "Certificate Name" | "Issuer & Year"
+- **Awards**, **Publications**, **Languages** - anything you want!
+
+💡 **Pro tip:** Don't worry about formatting in Excel. The system handles all the styling!
+
+---
+
+## 📥 Where Are My PDFs?
+
+Your resume is available in **three places** after each build:
+
+1. **Actions Tab** → Artifacts (good for 90 days)
+2. **Releases Page** → Permanent downloads
+3. **`builds` Branch** → PDFs stored in the repo itself (in `pdfs/` folder)
+
+Pick whichever is easiest for you!
+
+---
+
+## 🎨 What Makes This Special?
+
+### ✅ No Design Skills Needed
+The template is already professional. You just fill in the content.
+
+### ✅ No LaTeX Learning Curve
+LaTeX is powerful but scary. We hide all that complexity from you.
+
+### ✅ Version Control Built-In
+Every change is tracked in Git. Want to see your resume from last year? Easy!
+
+### ✅ Multiple Versions Support
+Need different resumes for different jobs? Create multiple Excel files!
+- `profiles/resume_software.xlsx`
+- `profiles/resume_management.xlsx`
+- `profiles/resume_academic.xlsx`
+
+All will build automatically into separate PDFs.
+
+### ✅ Automatic Updates
+Update your Excel → Push → New PDF ready in minutes.
+
+### ✅ Free Forever
+Everything runs on GitHub Actions (free tier = 2000 minutes/month).
+
+---
+
+## 🤔 FAQ
+
+### Do I need to install anything?
+**Nope!** If you use GitHub's web interface, you don't need to install anything at all.
+
+If you want to work locally, you just need Git (and Excel/LibreOffice to edit the file).
+
+### What if I mess something up?
+Git keeps all your history. You can always undo changes or go back to a previous version.
+
+### Can I change the design?
+Yes! If you're comfortable with LaTeX, you can edit `templates/latex/resume.cls` to change fonts, colors, spacing, etc. But the default looks great!
+
+### Can I use this for my team/company?
+Absolutely! Fork it and customize for your needs.
+
+### How does this actually work?
+<details>
+<summary>Click to see the technical flow (for curious minds)</summary>
 
 ```
-no-code-cv/
-├── profiles/
-│   └── *.xlsx                    # Resume profiles (edit these)
-│
-├── templates/latex/
-│   ├── resume.cls                # Styling (rarely change)
-│   └── includes/                 # Jinja2 templates
-│       ├── header.tex.j2         # Name & contact
-│       ├── summary.tex.j2        # Summary
-│       ├── experience.tex.j2     # Jobs (with loops)
-│       ├── education.tex.j2      # Degrees (with loops)
-│       ├── skills.tex.j2         # Skills table
-│       ├── volunteering.tex.j2   # Volunteer work
-│       ├── custom_simple.tex.j2  # Generic list
-│       └── custom_two_column.tex.j2  # Generic labeled list
-│
-├── scripts/
-│   └── generate_resume.py        # Excel → LaTeX renderer
-│
-└── build/                        # Generated (gitignored)
-    ├── includes/*.tex            # Generated from templates
-    ├── main.tex                  # Generated dynamically
-    └── resume_output.pdf         # Final PDF
+📊 Excel File (your data)
+    ↓
+🐍 Python Script (reads data)
+    ↓
+📄 Jinja2 Templates (fills in placeholders)
+    ↓
+📝 LaTeX Files (structured document)
+    ↓
+🔧 LaTeX Compiler (renders PDF)
+    ↓
+📄 Beautiful PDF Resume
 ```
 
-## 🎯 Key Features
+**Technologies used:**
+- Python + pandas (read Excel)
+- Jinja2 (templating)
+- LaTeX (typesetting)
+- GitHub Actions (automation)
 
-### Template-Based Architecture
-- **Jinja2 templates** with custom delimiters (`<< >>` instead of `{{ }}`)
-- Templates are **committed** to git
-- Generated `.tex` files are **not committed**
-- Excel is the **single source of truth**
+</details>
 
-### Smart Section Detection
-- **Core sections**: header, summary, experience, education, skills, volunteering
-- **Custom sections**: Add any Excel sheet name
-  - Simple list (1 column): Hobbies, Awards, etc.
-  - Two-column list (label + value): Certificates, Publications, etc.
+### Where's my data stored?
+Your Excel file lives in **your** GitHub repo. Only you control it. The system never sends your data anywhere else.
 
-### Automatic Workflows
-- **Local**: Run `generate_resume.py` → build PDF locally
-- **GitHub Actions**: Push → builds **ALL** `.xlsx` profiles in parallel
-- **Multi-output**: PDFs available via artifacts, releases, AND `builds` branch
-- **ETL Pattern**: Source (`main`/`dev`) → Build (CI/CD) → Output (`builds` branch)
+---
 
-## 🔑 Why This Works
+## 🎓 Learning Resources
 
-### 1. Separation of Concerns
-- **Data** (Excel) ≠ **Templates** (Jinja2) ≠ **Output** (LaTeX/PDF)
-- Edit data without touching code or templates
-- Modify templates without regenerating from scratch
+- **New to GitHub?** → [GitHub Hello World Guide](https://guides.github.com/activities/hello-world/)
+- **Want to customize?** → Check `USAGE_GUIDE.md` for detailed instructions
+- **Developer mode?** → See `VIBE_CODING_GUIDE.md` for technical details
 
-### 2. LaTeX Compatibility
-- Custom Jinja2 delimiters avoid conflicts with LaTeX `{ }`
-- Full LaTeX character escaping (automatically handles `&`, `%`, `$`, etc.)
-- Professional typesetting with single-page layout
-
-### 3. Version Control Friendly
-- Only source files committed (Excel, templates, scripts)
-- Generated files properly gitignored
-- Full history of resume changes
-- Collaborative editing with git branches
-
-### 4. Extensible & Maintainable
-- Add sections: Create new Excel sheet
-- Modify layout: Edit `.j2` templates
-- Change styling: Update `resume.cls`
-- No code changes needed for content updates
-
-## 🛠️ Technical Details
-
-### Jinja2 Template Syntax
-```latex
-% Variables
-<<name>>
-<<email>>
-
-% Loops
-<<% for job in jobs %>>
-  Job: <<job.title>>
-  <<% for bullet in job.bullets %>>
-    - <<bullet>>
-  <<% endfor %>>
-<<% endfor %>>
-
-% Conditionals
-<<% if vol.organization %>>
-  at <<vol.organization>>
-<<% endif %>>
-```
-
-### LaTeX Generation
-1. Read Excel with pandas
-2. Parse each sheet based on type
-3. Escape LaTeX special characters
-4. Render Jinja2 templates with data
-5. Write to `build/includes/*.tex`
-6. Generate `build/main.tex` dynamically
-7. Compile with `latexmk`
-
-### CI/CD Pipeline (Matrix Build)
-```yaml
-- Discover: Find all *.xlsx in profiles/
-- Matrix: Build each profile in parallel
-  - Generate LaTeX from Excel
-  - Compile PDF with latexmk
-  - Upload artifact (90 days)
-  - Create release (dev*/codex-* branches)
-  - Push to builds branch (permanent, in repo)
-```
-
-**Result:** All profiles → separate PDFs, accessible 3 ways!
-
-## 📚 Further Reading
-
-See `USAGE_GUIDE.md` for:
-- Detailed Excel structure
-- Custom section examples
-- Template customization
-- Troubleshooting
-- Advanced usage
+---
 
 ## 🤝 Contributing
 
-This project demonstrates template-based document generation. Contributions welcome that maintain:
-- Clean separation (data/templates/scripts)
-- Template-based approach (not code generation)
-- Excel as single source of truth
-- Professional project structure
+Found a bug? Have an idea? Open an issue or submit a pull request!
+
+This project is designed to be simple and accessible. Let's keep it that way.
+
+---
 
 ## 📄 License
 
-See LICENSE file.
+MIT License - Use it however you want!
+
+---
+
+## 💡 Credits
+
+Built with love for people who want great resumes without the hassle.
+
+**Stack:** Python • Jinja2 • LaTeX • GitHub Actions
+
+---
+
+**Questions? Issues? Ideas?** Open an issue on GitHub - I'm happy to help! 😊
