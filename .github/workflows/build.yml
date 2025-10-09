@@ -22,6 +22,8 @@ on:
 jobs:
   build-all-profiles:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Allow pushing to builds branch
     if: |
       github.event_name != 'schedule' || github.ref == 'refs/heads/main'
     
